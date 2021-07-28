@@ -2,6 +2,7 @@ import React from "react";
 import styled, { css, keyframes } from "styled-components";
 import { RiCameraLensLine, RiPolaroidLine, RiTimer2Line } from "react-icons/ri";
 import polarLogo from "../assets/polaroid-logo.png";
+import { useCallback } from "react";
 
 type Props = {
   changeAllWhite: () => void;
@@ -11,6 +12,8 @@ type Props = {
 function FormeTouch({ changeAllWhite, bodyWhite }: Props) {
   const refFlashBlock = React.useRef<HTMLDivElement>(null);
   const refBody = React.useRef<HTMLDivElement>(null);
+  const refCanvas = React.useRef<HTMLCanvasElement>(null);
+  const [imageData, setImageData] = React.useState<string | null>(null);
   const [borderAni, setBorderAni] = React.useState<boolean>(false);
 
   React.useEffect(() => {
@@ -27,6 +30,21 @@ function FormeTouch({ changeAllWhite, bodyWhite }: Props) {
     }
   }, [changeAllWhite]);
 
+  const onCapture = useCallback(() => {
+    const video = document.getElementsByTagName("video")[0];
+
+    if (refCanvas) {
+      const canvasContext = refCanvas.current?.getContext("2d");
+      canvasContext?.drawImage(video, 0, 0, 300, 150);
+
+      const data = refCanvas.current?.toDataURL("image/png");
+      canvasContext?.clearRect(0, 0, 300, 150);
+      canvasContext?.beginPath();
+
+      if (data) setImageData(data);
+    }
+  }, []);
+
   return (
     <>
       <FlashBlock white={bodyWhite} ref={refFlashBlock} ani={borderAni}>
@@ -40,7 +58,7 @@ function FormeTouch({ changeAllWhite, bodyWhite }: Props) {
       <BodyBack white={bodyWhite}>
         <ContentBlock className="display">
           <DisplayItem>
-            <li>
+            <li onClick={onCapture}>
               <RiCameraLensLine />
             </li>
             <li>
@@ -51,6 +69,7 @@ function FormeTouch({ changeAllWhite, bodyWhite }: Props) {
             </li>
           </DisplayItem>
           <DisplayBlock>
+            <canvas id="capture-box" ref={refCanvas} />
             <Display autoPlay />
             <img src={polarLogo} alt="logo" className="logo" />
           </DisplayBlock>
@@ -64,7 +83,13 @@ function FormeTouch({ changeAllWhite, bodyWhite }: Props) {
       </BodyBack>
       <Body white={bodyWhite} ani={borderAni} ref={refBody}>
         <PolarEnter>
-          <Polar />
+          <Polar>
+            {imageData ? (
+              <img src={imageData} alt="result" className="result" />
+            ) : (
+              <div className="polar-wrap" />
+            )}
+          </Polar>
           <PolarBack>
             <div className="vertical top" />
             <div className="horizontal left" />
@@ -79,18 +104,34 @@ function FormeTouch({ changeAllWhite, bodyWhite }: Props) {
   );
 }
 
+const AniPolar = keyframes`
+  0% {
+    transform: translateZ(-2.5px) translateX(0)
+  } 100% {
+    transform: translateZ(-2.5px) translateX(400px)
+  }
+`;
+
 const Polar = styled.div`
   position: absolute;
+  display: flex;
+  align-items: center;
   top: 0;
 
   width: 400px;
   height: 250px;
 
   border-radius: 0.5rem;
-  transform: translateZ(-2.5px) translateX(400px);
 
   box-shadow: 2px 2px 4px #333;
   background-color: #fff;
+
+  animation: ${AniPolar} 4s forwards linear;
+
+  & > * {
+    width: 330px;
+    height: 225px;
+  }
 `;
 
 const PolarBack = styled.div`
@@ -177,6 +218,12 @@ const DisplayBlock = styled.div`
   box-sizing: border-box;
   border-radius: 0.5rem;
   padding: 1.5rem 1.25rem;
+
+  & > canvas {
+    position: absolute;
+    width: 350px;
+    height: 225px;
+  }
 
   & > .logo {
     position: absolute;
