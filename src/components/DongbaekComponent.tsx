@@ -4,7 +4,16 @@ import styled, { css, keyframes } from "styled-components";
 import FormeTouch from "../atoms/FormeTouch";
 
 function DongbaekComponent() {
+  const refWhiteScreen = React.useRef<HTMLDivElement>(null);
   const [allWhite, setAllWhite] = React.useState<boolean>(false);
+  const [bodyFrontWhite, setBodyFrontWhite] = React.useState<boolean>(false);
+
+  React.useEffect(() => {
+    if (refWhiteScreen)
+      refWhiteScreen.current?.addEventListener("animationend", () => {
+        setBodyFrontWhite(true);
+      });
+  }, []);
 
   const changeAllWhite = useCallback(() => {
     setAllWhite(true);
@@ -12,9 +21,12 @@ function DongbaekComponent() {
 
   return (
     <DongbaekScreen>
-      <DongbaekScreenWhite ani={allWhite} />
+      <DongbaekScreenWhite ani={allWhite} ref={refWhiteScreen} />
       <PolarBlock>
-        <FormeTouch changeAllWhite={changeAllWhite} />
+        <FormeTouch
+          changeAllWhite={changeAllWhite}
+          bodyWhite={bodyFrontWhite}
+        />
       </PolarBlock>
     </DongbaekScreen>
   );
@@ -30,6 +42,8 @@ const AniWhiteScreen = keyframes`
 `;
 
 const DongbaekScreen = styled.div`
+  perspective: 1000px;
+
   display: flex;
   justify-content: center;
   align-items: center;
@@ -64,6 +78,10 @@ const PolarBlock = styled.div`
 
   width: 520px;
   height: 360px;
+
+  transform: rotateY(-75deg) rotateX(-10deg);
+  transform-origin: 50% 50%;
+  transform-style: preserve-3d;
 `;
 
 export default DongbaekComponent;
