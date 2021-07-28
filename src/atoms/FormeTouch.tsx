@@ -1,5 +1,7 @@
 import React from "react";
 import styled, { css, keyframes } from "styled-components";
+import { RiCameraLensLine, RiPolaroidLine, RiTimer2Line } from "react-icons/ri";
+import polarLogo from "../assets/polaroid-logo.png";
 
 type Props = {
   changeAllWhite: () => void;
@@ -36,13 +38,39 @@ function FormeTouch({ changeAllWhite, bodyWhite }: Props) {
         </div>
       </FlashBlock>
       <BodyBack white={bodyWhite}>
-        <Display autoPlay />
+        <ContentBlock className="display">
+          <DisplayItem>
+            <li>
+              <RiCameraLensLine />
+            </li>
+            <li>
+              <RiPolaroidLine />
+            </li>
+            <li>
+              <RiTimer2Line />
+            </li>
+          </DisplayItem>
+          <DisplayBlock>
+            <Display autoPlay />
+            <img src={polarLogo} alt="logo" className="logo" />
+          </DisplayBlock>
+        </ContentBlock>
         <div className="vertical top" />
-        <div className="horizontal right" />
+        <div className="horizontal right">
+          <div className="polar-enter" />
+        </div>
         <div className="vertical bottom" />
         <div className="horizontal left" />
       </BodyBack>
       <Body white={bodyWhite} ani={borderAni} ref={refBody}>
+        <PolarEnter>
+          <Polar />
+          <PolarBack>
+            <div className="vertical top" />
+            <div className="horizontal left" />
+            <div className="vertical bottom" />
+          </PolarBack>
+        </PolarEnter>
         <LensBlock ani={borderAni}>
           <Lens ani={borderAni} />
         </LensBlock>
@@ -51,7 +79,143 @@ function FormeTouch({ changeAllWhite, bodyWhite }: Props) {
   );
 }
 
-const Display = styled.video``;
+const Polar = styled.div`
+  position: absolute;
+  top: 0;
+
+  width: 400px;
+  height: 250px;
+
+  border-radius: 0.5rem;
+  transform: translateZ(-2.5px) translateX(400px);
+
+  box-shadow: 2px 2px 4px #333;
+  background-color: #fff;
+`;
+
+const PolarBack = styled.div`
+  transform-style: preserve-3d;
+  box-sizing: border-box;
+
+  position: relative;
+
+  width: 400px;
+  height: 250px;
+
+  border: 1px solid #000;
+
+  background-color: #000;
+  transform: translateZ(-5px);
+
+  & > div {
+    position: absolute;
+
+    background-color: #000;
+    border: 1px soild #000;
+    box-sizing: border-box;
+  }
+
+  & > .horizontal {
+    width: 5px;
+    height: 250px;
+  }
+
+  & > .vertical {
+    width: 400px;
+    height: 5px;
+  }
+
+  & > .top {
+    top: 0;
+
+    transform: rotateX(90deg);
+    transform-origin: 50% 0%;
+  }
+
+  & > .bottom {
+    bottom: 0;
+    transform-origin: 50% 100%;
+    transform: rotateX(-90deg);
+  }
+
+  & > .left {
+    left: 0;
+    transform-origin: 0% 50%;
+    transform: rotateY(-90deg);
+  }
+`;
+
+const PolarEnter = styled.div`
+  transform-style: preserve-3d;
+  box-sizing: border-box;
+
+  position: absolute;
+  right: 0;
+
+  width: 400px;
+  height: 250px;
+
+  border: 1px solid #000;
+
+  transform: translateZ(-70px);
+  background-color: #fff;
+`;
+
+const ContentBlock = styled.div`
+  transform: translateZ(-2px);
+
+  display: flex;
+  flex-direction: row;
+`;
+
+const DisplayBlock = styled.div`
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #000;
+  box-sizing: border-box;
+  border-radius: 0.5rem;
+  padding: 1.5rem 1.25rem;
+
+  & > .logo {
+    position: absolute;
+    bottom: 0.25rem;
+    left: calc(50% - 35px);
+    transform: rotateY(180deg);
+    width: 70px;
+
+    filter: grayscale(100%);
+  }
+`;
+const Display = styled.video`
+  width: 350px;
+  height: 225px;
+  object-fit: cover;
+  border-radius: 0.25rem;
+  /* transform: rotateY(180deg); */
+`;
+const DisplayItem = styled.ul`
+  font-size: 1.5rem;
+
+  padding: 1rem;
+
+  & > li {
+    border-radius: 100%;
+
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+    box-shadow: -0.5px -0.5px 4px #333;
+
+    width: 2rem;
+    height: 2rem;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+`;
+
 const AniFlashBlock = keyframes`
   from {
     transform: translateY(0) translateZ(-35px);
@@ -94,6 +258,8 @@ const Body = styled.div<{ ani?: boolean; white?: boolean }>`
   border-radius: 32px;
   background-color: #000;
 
+  transform-style: preserve-3d;
+
   ${(props) =>
     props.ani &&
     css`
@@ -134,13 +300,7 @@ const BodyBack = styled.div<{ white?: boolean }>`
       background-color: #fff;
     `}
 
-  & > video {
-    transform: translateZ(-10px);
-    width: 300px;
-    height: 150px;
-  }
-
-  & > div {
+  & > div:not(.display) {
     box-sizing: border-box;
     position: absolute;
     border: 1px solid #000;
@@ -177,6 +337,20 @@ const BodyBack = styled.div<{ white?: boolean }>`
     right: 0;
     transform-origin: 100% 0%;
     transform: rotateY(90deg);
+
+    & > .polar-enter {
+      position: absolute;
+      top: calc(50% - 125px);
+      left: 70px;
+
+      width: 5px;
+      height: 250px;
+
+      border: 1px solid #000;
+      background-color: #000;
+
+      box-sizing: border-box;
+    }
   }
 
   & > .left {

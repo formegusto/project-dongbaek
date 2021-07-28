@@ -79,7 +79,7 @@ const PolarBlock = styled.div`
   width: 520px;
   height: 360px;
 
-  transform: rotateY(-75deg) rotateX(-10deg);
+  transform: rotateY(0deg) rotateX(0deg);
   transform-origin: 50% 50%;
   transform-style: preserve-3d;
 `;
