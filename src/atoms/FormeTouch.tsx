@@ -3,6 +3,7 @@ import styled, { css, keyframes } from "styled-components";
 import { RiCameraLensLine, RiPolaroidLine, RiTimer2Line } from "react-icons/ri";
 import polarLogo from "../assets/polaroid-logo.png";
 import { useCallback } from "react";
+import FlowersComponent from "../components/FlowersComponent";
 
 type Props = {
   changeAllWhite: () => void;
@@ -96,6 +97,7 @@ function FormeTouch({ changeAllWhite, bodyWhite }: Props) {
             <div className="vertical bottom" />
           </PolarBack>
         </PolarEnter>
+        <FlowersComponent />
         <LensBlock ani={borderAni}>
           <Lens ani={borderAni} />
         </LensBlock>
@@ -126,7 +128,7 @@ const Polar = styled.div`
   box-shadow: 2px 2px 4px #333;
   background-color: #fff;
 
-  animation: ${AniPolar} 4s forwards linear;
+  /* animation: ${AniPolar} 4s forwards linear; */
 
   & > * {
     width: 330px;
@@ -311,11 +313,12 @@ const Body = styled.div<{ ani?: boolean; white?: boolean }>`
     props.ani &&
     css`
       animation: ${AniBorderWidth} 1s forwards;
-      background-color: transparent;
+      /* background-color: transparent; */
     `}
   ${(props) =>
     props.white &&
     css`
+      transition: 1s;
       background-color: #fff;
     `}
 `;
@@ -455,7 +458,6 @@ const FlashBlock = styled.div<{ ani?: boolean; white?: boolean }>`
       box-sizing: border-box;
       position: absolute;
       border: 1px solid #000;
-      background-color: #fff;
     }
 
     & > .vertical {

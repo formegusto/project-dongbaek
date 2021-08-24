@@ -22,6 +22,7 @@ function DongbaekComponent() {
   return (
     <DongbaekScreen>
       <DongbaekScreenWhite ani={allWhite} ref={refWhiteScreen} />
+
       <PolarBlock>
         <FormeTouch
           changeAllWhite={changeAllWhite}
