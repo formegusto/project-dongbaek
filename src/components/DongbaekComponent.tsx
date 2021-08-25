@@ -11,18 +11,17 @@ function DongbaekComponent() {
   React.useEffect(() => {
     if (refWhiteScreen)
       refWhiteScreen.current?.addEventListener("animationend", () => {
-        setBodyFrontWhite(true);
+        // setBodyFrontWhite(true);
       });
   }, []);
 
   const changeAllWhite = useCallback(() => {
-    setAllWhite(true);
+    // setAllWhite(true);
   }, []);
 
   return (
     <DongbaekScreen>
       <DongbaekScreenWhite ani={allWhite} ref={refWhiteScreen} />
-
       <PolarBlock>
         <FormeTouch
           changeAllWhite={changeAllWhite}
@@ -80,7 +79,7 @@ const PolarBlock = styled.div`
   width: 520px;
   height: 360px;
 
-  transform: rotateY(180deg) rotateX(0deg);
+  transform: rotateY(0deg) rotateX(0deg);
   transform-origin: 50% 50%;
   transform-style: preserve-3d;
 `;

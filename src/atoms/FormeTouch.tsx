@@ -15,12 +15,15 @@ function FormeTouch({ changeAllWhite, bodyWhite }: Props) {
   const refBody = React.useRef<HTMLDivElement>(null);
   const refCanvas = React.useRef<HTMLCanvasElement>(null);
   const [imageData, setImageData] = React.useState<string | null>(null);
+  const [showTitle, setShowTitle] = React.useState<boolean>(false);
+  const [showFlower, setShowFlower] = React.useState<boolean>(false);
   const [borderAni, setBorderAni] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     if (refFlashBlock) {
       refFlashBlock.current?.addEventListener("animationend", () => {
-        setBorderAni(true);
+        // setBorderAni(true);
+        setShowFlower(true);
       });
     }
 
@@ -30,6 +33,16 @@ function FormeTouch({ changeAllWhite, bodyWhite }: Props) {
       });
     }
   }, [changeAllWhite]);
+
+  React.useEffect(() => {
+    if (showFlower) {
+      const dongbaekList = document.getElementsByClassName("dongbaek");
+      for (let i = 0; i < dongbaekList.length; i++)
+        dongbaekList.item(i)?.addEventListener("transitionend", (ev: any) => {
+          if (ev.target.classList.contains("red")) setShowTitle(true);
+        });
+    }
+  }, [showFlower]);
 
   const onCapture = useCallback(() => {
     const video = document.getElementsByTagName("video")[0];
@@ -97,14 +110,73 @@ function FormeTouch({ changeAllWhite, bodyWhite }: Props) {
             <div className="vertical bottom" />
           </PolarBack>
         </PolarEnter>
-        <FlowersComponent />
+        {showFlower && <FlowersComponent />}
         <LensBlock ani={borderAni}>
           <Lens ani={borderAni} />
         </LensBlock>
+        {showTitle && (
+          <>
+            <Title.Main>DONGBAEK</Title.Main>
+            <Title.Sub>pure someday</Title.Sub>
+          </>
+        )}
       </Body>
     </>
   );
 }
+
+const TitleAni = {
+  Main: keyframes`
+    from {
+      opacity: 0;
+      transform: translateX(-20px);
+    } to {
+      opacity: 1;
+      transform: translateX(0px);
+    }
+  `,
+  Sub: keyframes`
+    from {
+      opacity: 0;
+      transform: translateX(20px);
+    } to {
+      opacity: 1;
+      transform: translateX(0px);
+    }
+  `,
+};
+
+const Title = {
+  Main: styled.h1`
+    position: absolute;
+    top: 70px;
+    left: 70px;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 36px;
+    line-height: 44px;
+    /* identical to box height */
+
+    letter-spacing: -0.05em;
+
+    color: #333333;
+
+    animation: ${TitleAni.Main} 0.5s linear;
+  `,
+  Sub: styled.h2`
+    position: absolute;
+    bottom: 70px;
+    right: 70px;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 24px;
+    line-height: 29px;
+    letter-spacing: 0.2em;
+
+    color: #333333;
+    animation: ${TitleAni.Sub} 0.5s linear;
+  `,
+};
 
 const AniPolar = keyframes`
   0% {
@@ -294,6 +366,7 @@ const AniBorderWidth = keyframes`
 const Body = styled.div<{ ani?: boolean; white?: boolean }>`
   z-index: 2;
   position: relative;
+  overflow: hidden;
 
   display: flex;
   justify-content: center;

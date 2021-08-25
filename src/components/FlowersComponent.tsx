@@ -1,15 +1,44 @@
-import styled from "styled-components";
+import React from "react";
+import styled, { css } from "styled-components";
+import FlowersData from "../store/FlowersData";
 
 type ColorType = "red" | "pink" | "white";
+/* is absolute */
+type Rect = {
+  x?: number;
+  y?: number;
+  rot?: number;
+};
+
 type FlowerStyle = {
   size: number /* is px */;
   color: ColorType;
-  transformStyle?: string;
+  rect?: Rect;
+
+  timeout?: number;
+  duration?: number;
 };
 
 function Flower(props: FlowerStyle) {
+  const refDongbaek = React.useRef<HTMLDivElement>(null);
+  React.useEffect(() => {
+    setTimeout(
+      () => {
+        if (refDongbaek.current) {
+          refDongbaek.current.style.transform =
+            "rotateZ(" + props.rect?.rot + "deg)" + "scale(" + 3 + ")";
+        }
+      },
+      props.duration ? props.duration : 10
+    );
+  }, [props]);
+
   return (
-    <OneFlower.Wrap {...props}>
+    <OneFlower.Wrap
+      {...props}
+      ref={refDongbaek}
+      className={`dongbaek ${props.color}`}
+    >
       <OneFlower.Petal1 className="petal" />
       <OneFlower.Petal2 className="petal" />
       <OneFlower.Petal3 className="petal" />
@@ -22,14 +51,26 @@ function Flower(props: FlowerStyle) {
 
 const OneFlower = {
   Wrap: styled.div<FlowerStyle>`
-    position: relative;
+    position: absolute;
     display: flex;
     justify-content: center;
     align-items: center;
     width: ${(props) => props.size}px;
     height: ${(props) => props.size}px;
+    transform-origin: 50% 50%;
 
-    transform: ${(props) => props.transformStyle};
+    ${({ timeout }) => css`
+      transition: ${timeout}s ease-out;
+    `}
+
+    ${({ rect }) =>
+      rect &&
+      css`
+        top: ${rect.y}px;
+        left: ${rect.x}px;
+
+        ${rect.rot && `transform: rotateZ(${rect.rot}deg) scale(0)`}
+      `};
 
     & > .petal {
       position: absolute;
@@ -86,8 +127,15 @@ const OneFlower = {
 function FlowersComponent() {
   return (
     <FlowersBlock>
-      {(["red", "pink", "white"] as ColorType[]).map((color, idx) => (
-        <Flower size={200} color={color} key={idx} />
+      {FlowersData.map((flower, idx) => (
+        <Flower
+          size={200}
+          color={flower.color}
+          key={idx}
+          rect={{ x: flower.x, y: flower.y, rot: flower.rot }}
+          timeout={flower.timeout}
+          duration={flower.duration}
+        />
       ))}
     </FlowersBlock>
   );
