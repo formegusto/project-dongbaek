@@ -5,25 +5,31 @@ import FormeTouch from "../atoms/FormeTouch";
 
 function DongbaekComponent() {
   const refWhiteScreen = React.useRef<HTMLDivElement>(null);
+  const [borderAni, setBorderAni] = React.useState<boolean>(false);
   const [allWhite, setAllWhite] = React.useState<boolean>(false);
   const [bodyFrontWhite, setBodyFrontWhite] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     if (refWhiteScreen)
       refWhiteScreen.current?.addEventListener("animationend", () => {
-        // setBodyFrontWhite(true);
+        setBodyFrontWhite(true);
       });
   }, []);
 
   const changeAllWhite = useCallback(() => {
-    // setAllWhite(true);
+    setAllWhite(true);
+  }, []);
+
+  const changeBorderAni = useCallback(() => {
+    setBorderAni(true);
   }, []);
 
   return (
-    <DongbaekScreen>
-      <DongbaekScreenWhite ani={allWhite} ref={refWhiteScreen} />
-      <PolarBlock>
+    <DongbaekScreen ani={allWhite}>
+      <PolarBlock className="dimension">
         <FormeTouch
+          borderAni={borderAni}
+          changeBorderAni={changeBorderAni}
           changeAllWhite={changeAllWhite}
           bodyWhite={bodyFrontWhite}
         />
@@ -32,49 +38,36 @@ function DongbaekComponent() {
   );
 }
 
-const AniWhiteScreen = keyframes`
-  from {
-    border-radius: 100%;
-    trasform: scale(0);
-  } to {
-    transform: scale(1);
-  }
-`;
-
-const DongbaekScreen = styled.div`
+const DongbaekScreen = styled.div<{ ani?: boolean }>`
   perspective: 1000px;
 
   display: flex;
   justify-content: center;
   align-items: center;
-
-  width: 100%;
-  height: 100%;
-
-  background-color: #000;
-`;
-
-const DongbaekScreenWhite = styled.div<{ ani?: boolean }>`
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
 
   width: 100%;
-  height: 100%;
+  height: 100vh;
 
-  background-color: #fff;
+  transition: 1s;
 
-  transform: scale(0);
-
-  ${(props) =>
-    props.ani &&
-    css`
-      animation: ${AniWhiteScreen} 0.7s forwards;
-    `}
+  ${({ ani }) =>
+    ani
+      ? css`
+          background-color: #fff;
+        `
+      : css`
+          background-color: #000;
+        `}
 `;
 
 const PolarBlock = styled.div`
   position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   width: 520px;
   height: 360px;

@@ -6,23 +6,28 @@ import { useCallback } from "react";
 import FlowersComponent from "../components/FlowersComponent";
 
 type Props = {
+  changeBorderAni: () => void;
+  borderAni: boolean;
   changeAllWhite: () => void;
   bodyWhite: boolean;
 };
 
-function FormeTouch({ changeAllWhite, bodyWhite }: Props) {
+function FormeTouch({
+  borderAni,
+  changeBorderAni,
+  changeAllWhite,
+  bodyWhite,
+}: Props) {
   const refFlashBlock = React.useRef<HTMLDivElement>(null);
   const refBody = React.useRef<HTMLDivElement>(null);
   const refCanvas = React.useRef<HTMLCanvasElement>(null);
   const [imageData, setImageData] = React.useState<string | null>(null);
   const [showTitle, setShowTitle] = React.useState<boolean>(false);
   const [showFlower, setShowFlower] = React.useState<boolean>(false);
-  const [borderAni, setBorderAni] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     if (refFlashBlock) {
       refFlashBlock.current?.addEventListener("animationend", () => {
-        // setBorderAni(true);
         setShowFlower(true);
       });
     }
@@ -39,10 +44,20 @@ function FormeTouch({ changeAllWhite, bodyWhite }: Props) {
       const dongbaekList = document.getElementsByClassName("dongbaek");
       for (let i = 0; i < dongbaekList.length; i++)
         dongbaekList.item(i)?.addEventListener("transitionend", (ev: any) => {
-          if (ev.target.classList.contains("red")) setShowTitle(true);
+          if (ev.target.classList.contains("red")) {
+            setShowTitle(true);
+            const title = document.querySelector(
+              ".title.main"
+            ) as HTMLDivElement;
+            title.addEventListener("animationend", () => {
+              changeBorderAni();
+            });
+          }
+          if (ev.target.classList.contains("pink")) {
+          }
         });
     }
-  }, [showFlower]);
+  }, [showFlower, changeBorderAni]);
 
   const onCapture = useCallback(() => {
     const video = document.getElementsByTagName("video")[0];
@@ -95,30 +110,30 @@ function FormeTouch({ changeAllWhite, bodyWhite }: Props) {
         <div className="vertical bottom" />
         <div className="horizontal left" />
       </BodyBack>
+      <PolarEnter>
+        <Polar>
+          {imageData ? (
+            <img src={imageData} alt="result" className="result" />
+          ) : (
+            <div className="polar-wrap" />
+          )}
+        </Polar>
+        <PolarBack>
+          <div className="vertical top" />
+          <div className="horizontal left" />
+          <div className="vertical bottom" />
+        </PolarBack>
+      </PolarEnter>
       <Body white={bodyWhite} ani={borderAni} ref={refBody}>
-        <PolarEnter>
-          <Polar>
-            {imageData ? (
-              <img src={imageData} alt="result" className="result" />
-            ) : (
-              <div className="polar-wrap" />
-            )}
-          </Polar>
-          <PolarBack>
-            <div className="vertical top" />
-            <div className="horizontal left" />
-            <div className="vertical bottom" />
-          </PolarBack>
-        </PolarEnter>
         {showFlower && <FlowersComponent />}
         <LensBlock ani={borderAni}>
           <Lens ani={borderAni} />
         </LensBlock>
         {showTitle && (
-          <>
-            <Title.Main>DONGBAEK</Title.Main>
-            <Title.Sub>pure someday</Title.Sub>
-          </>
+          <Title.Wrap>
+            <Title.Main className="title main">DONGBAEK</Title.Main>
+            <Title.Sub className="title sub">pure someday</Title.Sub>
+          </Title.Wrap>
         )}
       </Body>
     </>
@@ -147,6 +162,12 @@ const TitleAni = {
 };
 
 const Title = {
+  Wrap: styled.div`
+    position: absolute;
+
+    width: 520px;
+    height: 360px;
+  `,
   Main: styled.h1`
     position: absolute;
     top: 70px;
@@ -352,6 +373,7 @@ const AniFlashBlockBorder = keyframes`
   }
   to {
     border: 2px solid #000;
+    background-color: #fff;
     border-bottom: none;
     transform: translateY(-70px) translateZ(-35px);
   }
@@ -359,6 +381,7 @@ const AniFlashBlockBorder = keyframes`
 
 const AniBorderWidth = keyframes`
   to {
+    background-color: #fff;
     border: 2px solid #000;
   }
 `;
@@ -411,6 +434,7 @@ const BodyBack = styled.div<{ white?: boolean }>`
 
   box-sizing: border-box;
   border: 2px solid #000;
+
   border-radius: 32px;
   background-color: transparent;
 
