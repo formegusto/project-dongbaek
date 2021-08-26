@@ -47,7 +47,7 @@ function FormeTouch({
           if (ev.target.classList.contains("red")) {
             setShowTitle(true);
             const title = document.querySelector(
-              ".title.main"
+              ".title.background"
             ) as HTMLDivElement;
             title.addEventListener("animationend", () => {
               changeBorderAni();
@@ -124,8 +124,10 @@ function FormeTouch({
           <div className="vertical bottom" />
         </PolarBack>
       </PolarEnter>
+
       <Body white={bodyWhite} ani={borderAni} ref={refBody}>
         {showFlower && <FlowersComponent />}
+        {showTitle && <Title.Background className="title background" />}
         <LensBlock ani={borderAni}>
           <Lens ani={borderAni} />
         </LensBlock>
@@ -141,37 +143,65 @@ function FormeTouch({
 }
 
 const TitleAni = {
-  Main: keyframes`
-    from {
+  Background: keyframes`
+    0% {
       opacity: 0;
-      transform: translateX(-20px);
-    } to {
+    } 100% {
       opacity: 1;
+    }
+  `,
+  Wrap: keyframes`
+    0% {
+      opacity: 0;
+    } 50% {
+      opacity: 1;
+    } 100% {
+      opacity: 0;
+    } 
+  `,
+  Main: keyframes`
+    0% {
+      transform: translateX(-20px);
+    } 50% {
       transform: translateX(0px);
+    } 100% {
+      transform: translateX(20px);
     }
   `,
   Sub: keyframes`
-    from {
-      opacity: 0;
+    0% {
       transform: translateX(20px);
-    } to {
-      opacity: 1;
+    } 50% {
       transform: translateX(0px);
+    } 100% {
+      transform: translateX(-20px);
     }
   `,
 };
 
 const Title = {
+  Background: styled.div`
+    position: absolute;
+
+    width: 520px;
+    height: 360px;
+
+    background-color: #fff;
+
+    animation: ${TitleAni.Background} 0.5s linear forwards;
+  `,
   Wrap: styled.div`
     position: absolute;
 
     width: 520px;
     height: 360px;
+
+    animation: ${TitleAni.Wrap} 2.5s linear forwards;
   `,
   Main: styled.h1`
     position: absolute;
-    top: 70px;
-    left: 70px;
+    top: 50px;
+    left: 50px;
     font-style: normal;
     font-weight: 300;
     font-size: 36px;
@@ -182,12 +212,12 @@ const Title = {
 
     color: #333333;
 
-    animation: ${TitleAni.Main} 0.5s linear;
+    animation: ${TitleAni.Main} 2.5s linear forwards;
   `,
   Sub: styled.h2`
     position: absolute;
-    bottom: 70px;
-    right: 70px;
+    bottom: 50px;
+    right: 50px;
     font-style: normal;
     font-weight: bold;
     font-size: 24px;
@@ -195,7 +225,7 @@ const Title = {
     letter-spacing: 0.2em;
 
     color: #333333;
-    animation: ${TitleAni.Sub} 0.5s linear;
+    animation: ${TitleAni.Sub} 2.5s linear forwards;
   `,
 };
 
@@ -408,7 +438,7 @@ const Body = styled.div<{ ani?: boolean; white?: boolean }>`
   ${(props) =>
     props.ani &&
     css`
-      animation: ${AniBorderWidth} 1s forwards;
+      animation: ${AniBorderWidth} 0s forwards;
       /* background-color: transparent; */
     `}
   ${(props) =>
@@ -436,7 +466,8 @@ const BodyBack = styled.div<{ white?: boolean }>`
   border: 2px solid #000;
 
   border-radius: 32px;
-  background-color: transparent;
+  /* background-color: transparent; */
+  background-color: #fff;
 
   transform: translateZ(-140px);
   transform-origin: 50% 50%;
@@ -509,6 +540,7 @@ const BodyBack = styled.div<{ white?: boolean }>`
 
 const FlashBlock = styled.div<{ ani?: boolean; white?: boolean }>`
   transform-style: preserve-3d;
+  display: flex;
 
   position: absolute;
   z-index: 1;
@@ -528,7 +560,7 @@ const FlashBlock = styled.div<{ ani?: boolean; white?: boolean }>`
   ${(props) =>
     props.ani &&
     css`
-      animation: ${AniFlashBlockBorder} 1s forwards;
+      animation: ${AniFlashBlockBorder} 0.3s forwards;
     `}
 
   ${(props) =>
@@ -601,17 +633,19 @@ const LensBlock = styled.div<{ ani?: boolean }>`
   justify-content: center;
   align-items: center;
 
+  position: absolute;
+
   width: 200px;
   height: 200px;
 
-  border: 6px solid #ffffff;
+  border: 16px solid #fff;
   box-sizing: border-box;
   border-radius: 100%;
 
   ${(props) =>
     props.ani &&
     css`
-      animation: ${AniBorderWidth} 1s forwards;
+      animation: ${AniBorderWidth} 0s forwards;
     `}
 `;
 
@@ -619,14 +653,14 @@ const Lens = styled.div<{ ani?: boolean }>`
   width: 135px;
   height: 135px;
 
-  border: 6px solid #ffffff;
+  border: 16px solid #fff;
   box-sizing: border-box;
   border-radius: 100%;
 
   ${(props) =>
     props.ani &&
     css`
-      animation: ${AniBorderWidth} 1s forwards;
+      animation: ${AniBorderWidth} 0s forwards;
     `}
 `;
 

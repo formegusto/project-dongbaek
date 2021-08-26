@@ -7,6 +7,7 @@ function DongbaekPage() {
   const refScreen = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
+    window.history.scrollRestoration = "manual";
     window.addEventListener(
       "scroll",
       _.throttle((e: any) => {
