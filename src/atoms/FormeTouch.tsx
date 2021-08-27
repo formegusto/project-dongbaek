@@ -99,7 +99,11 @@ function FormeTouch({
           </DisplayItem>
           <DisplayBlock>
             <canvas id="capture-box" ref={refCanvas} />
-            <Display autoPlay />
+
+            <Filter id="display-filter">
+              <Display autoPlay id="display-video" />
+            </Filter>
+
             <img src={polarLogo} alt="logo" className="logo" />
           </DisplayBlock>
         </ContentBlock>
@@ -360,9 +364,15 @@ const DisplayBlock = styled.div`
     filter: grayscale(100%);
   }
 `;
-const Display = styled.video`
+const Filter = styled.figure`
   width: 350px;
   height: 225px;
+
+  border-radius: 0.25rem;
+`;
+const Display = styled.video`
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   border-radius: 0.25rem;
   /* transform: rotateY(180deg); */

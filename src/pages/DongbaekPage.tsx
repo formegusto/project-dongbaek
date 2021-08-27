@@ -2,9 +2,28 @@ import React from "react";
 import DongbaekContainer from "../containers/DongbaekContainer";
 import { FullScreen } from "../styles/Screen";
 import _ from "lodash";
+import FiltersModal from "../components/FiltersModal";
 
 function DongbaekPage() {
+  const [videoStream, setVideoStream] = React.useState<MediaStream>();
   const refScreen = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    const video = document.getElementById("display-video") as HTMLVideoElement;
+
+    navigator.getUserMedia(
+      {
+        video: true,
+      },
+      (stream: MediaStream) => {
+        setVideoStream(stream);
+        video.srcObject = stream;
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }, []);
 
   React.useEffect(() => {
     window.history.scrollRestoration = "manual";
@@ -26,6 +45,7 @@ function DongbaekPage() {
   return (
     <FullScreen ref={refScreen}>
       <DongbaekContainer />
+      <FiltersModal videoStream={videoStream} />
     </FullScreen>
   );
 }
