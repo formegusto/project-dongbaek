@@ -3,10 +3,15 @@ import DongbaekContainer from "../containers/DongbaekContainer";
 import { FullScreen } from "../styles/Screen";
 import _ from "lodash";
 import FiltersModal from "../components/FiltersModal";
+import { inject, observer } from "mobx-react";
+import UIStore from "../store/UIStore";
 
-function DongbaekPage() {
+type Props = {
+  store?: UIStore;
+};
+
+function DongbaekPage({ store }: Props) {
   const [videoStream, setVideoStream] = React.useState<MediaStream>();
-  const [showFilter, setShowFilter] = React.useState<boolean>(false);
   const refScreen = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
@@ -43,21 +48,14 @@ function DongbaekPage() {
     );
   }, []);
 
-  const changeFilterModalState = React.useCallback((state: boolean) => {
-    setShowFilter(state);
-  }, []);
-
   return (
     <FullScreen ref={refScreen}>
-      <DongbaekContainer changeFilterModalState={changeFilterModalState} />
-      {showFilter && (
-        <FiltersModal
-          videoStream={videoStream}
-          changeFilterModalState={changeFilterModalState}
-        />
-      )}
+      <DongbaekContainer />
+      {store?.showModal && <FiltersModal videoStream={videoStream} />}
     </FullScreen>
   );
 }
 
-export default DongbaekPage;
+export default inject((store: { uiStore: UIStore }) => ({
+  store: store.uiStore,
+}))(observer(DongbaekPage));

@@ -3,11 +3,7 @@ import { useCallback } from "react";
 import styled, { css } from "styled-components";
 import FormeTouch from "../atoms/FormeTouch";
 
-type Props = {
-  changeFilterModalState: (state: boolean) => void;
-};
-
-function DongbaekComponent({ changeFilterModalState }: Props) {
+function DongbaekComponent() {
   const refWhiteScreen = React.useRef<HTMLDivElement>(null);
   const [borderAni, setBorderAni] = React.useState<boolean>(false);
   const [allWhite, setAllWhite] = React.useState<boolean>(false);
@@ -36,7 +32,6 @@ function DongbaekComponent({ changeFilterModalState }: Props) {
           changeBorderAni={changeBorderAni}
           changeAllWhite={changeAllWhite}
           bodyWhite={bodyFrontWhite}
-          changeFilterModalState={changeFilterModalState}
         />
       </PolarBlock>
     </DongbaekScreen>

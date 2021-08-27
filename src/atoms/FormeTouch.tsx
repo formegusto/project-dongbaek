@@ -4,13 +4,15 @@ import { RiCameraLensLine, RiPolaroidLine, RiTimer2Line } from "react-icons/ri";
 import polarLogo from "../assets/polaroid-logo.png";
 import { useCallback } from "react";
 import FlowersComponent from "../components/FlowersComponent";
+import { inject, observer } from "mobx-react";
+import UIStore from "../store/UIStore";
 
 type Props = {
   changeBorderAni: () => void;
   borderAni: boolean;
   changeAllWhite: () => void;
   bodyWhite: boolean;
-  changeFilterModalState: (state: boolean) => void;
+  store?: UIStore;
 };
 
 function FormeTouch({
@@ -18,7 +20,7 @@ function FormeTouch({
   changeBorderAni,
   changeAllWhite,
   bodyWhite,
-  changeFilterModalState,
+  store,
 }: Props) {
   const refFlashBlock = React.useRef<HTMLDivElement>(null);
   const refBody = React.useRef<HTMLDivElement>(null);
@@ -92,7 +94,7 @@ function FormeTouch({
             <li onClick={onCapture}>
               <RiCameraLensLine />
             </li>
-            <li onClick={() => changeFilterModalState(true)}>
+            <li onClick={() => store?.changeModalState(true)}>
               <RiPolaroidLine />
             </li>
             <li>
@@ -102,7 +104,7 @@ function FormeTouch({
           <DisplayBlock>
             <canvas id="capture-box" ref={refCanvas} />
 
-            <Filter id="display-filter">
+            <Filter id="display-filter" className={store?.selectFilter}>
               <Display autoPlay id="display-video" />
             </Filter>
 
@@ -676,4 +678,6 @@ const Lens = styled.div<{ ani?: boolean }>`
     `}
 `;
 
-export default FormeTouch;
+export default inject((store: { uiStore: UIStore }) => ({
+  store: store.uiStore,
+}))(observer(FormeTouch));

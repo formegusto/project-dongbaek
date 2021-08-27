@@ -1,4 +1,4 @@
-type Filter = {
+export type Filter = {
   name: string;
   className: string;
 };

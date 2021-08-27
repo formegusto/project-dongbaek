@@ -25,8 +25,7 @@ function Flower(props: FlowerStyle) {
     setTimeout(
       () => {
         if (refDongbaek.current) {
-          refDongbaek.current.style.transform =
-            "rotateZ(" + props.rect?.rot + "deg)" + "scale(" + 3 + ")";
+          refDongbaek.current.style.transform = `rotateZ(${props.rect?.rot}deg) scale(3)`;
         }
       },
       props.duration ? props.duration : 10

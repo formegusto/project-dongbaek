@@ -1,13 +1,14 @@
+import { inject, observer } from "mobx-react";
 import React from "react";
 import styled from "styled-components";
-import Filters from "../store/Filters";
+import UIStore from "../store/UIStore";
 
 type Props = {
   videoStream?: MediaStream;
-  changeFilterModalState: (state: boolean) => void;
+  store?: UIStore;
 };
 
-function FiltersModal({ videoStream, changeFilterModalState }: Props) {
+function FiltersModal({ videoStream, store }: Props) {
   React.useEffect(() => {
     if (videoStream) {
       const modalVideos = document.getElementsByClassName("modal-video");
@@ -19,17 +20,10 @@ function FiltersModal({ videoStream, changeFilterModalState }: Props) {
 
   const selectFilter = React.useCallback(
     (filterName: string) => {
-      const filterFigure = document.getElementById(
-        "display-filter"
-      ) as HTMLElement;
-      filterFigure.classList.forEach((f) => {
-        if (Filters.filter((filter) => filter.className === f).length >= 1)
-          filterFigure.classList.remove(f);
-      });
-      if (filterName !== "") filterFigure.classList.add(filterName);
-      changeFilterModalState(false);
+      store?.changeFilter(filterName);
+      store?.changeModalState(false);
     },
-    [changeFilterModalState]
+    [store]
   );
 
   return (
@@ -37,7 +31,7 @@ function FiltersModal({ videoStream, changeFilterModalState }: Props) {
       <Modal.Background />
       <Modal.Screen>
         <Modal.Block>
-          {Filters.map((filter, idx) => (
+          {store?.filters.map((filter, idx) => (
             <Color.Block
               className={filter.className}
               key={idx}
@@ -115,4 +109,6 @@ const Color = {
   `,
 };
 
-export default FiltersModal;
+export default inject((store: { uiStore: UIStore }) => ({
+  store: store.uiStore,
+}))(observer(FiltersModal));
