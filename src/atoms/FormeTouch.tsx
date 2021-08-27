@@ -10,6 +10,7 @@ type Props = {
   borderAni: boolean;
   changeAllWhite: () => void;
   bodyWhite: boolean;
+  changeFilterModalState: (state: boolean) => void;
 };
 
 function FormeTouch({
@@ -17,6 +18,7 @@ function FormeTouch({
   changeBorderAni,
   changeAllWhite,
   bodyWhite,
+  changeFilterModalState,
 }: Props) {
   const refFlashBlock = React.useRef<HTMLDivElement>(null);
   const refBody = React.useRef<HTMLDivElement>(null);
@@ -90,7 +92,7 @@ function FormeTouch({
             <li onClick={onCapture}>
               <RiCameraLensLine />
             </li>
-            <li>
+            <li onClick={() => changeFilterModalState(true)}>
               <RiPolaroidLine />
             </li>
             <li>

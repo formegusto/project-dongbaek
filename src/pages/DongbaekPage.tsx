@@ -6,6 +6,7 @@ import FiltersModal from "../components/FiltersModal";
 
 function DongbaekPage() {
   const [videoStream, setVideoStream] = React.useState<MediaStream>();
+  const [showFilter, setShowFilter] = React.useState<boolean>(false);
   const refScreen = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
@@ -42,10 +43,19 @@ function DongbaekPage() {
     );
   }, []);
 
+  const changeFilterModalState = React.useCallback((state: boolean) => {
+    setShowFilter(state);
+  }, []);
+
   return (
     <FullScreen ref={refScreen}>
-      <DongbaekContainer />
-      <FiltersModal videoStream={videoStream} />
+      <DongbaekContainer changeFilterModalState={changeFilterModalState} />
+      {showFilter && (
+        <FiltersModal
+          videoStream={videoStream}
+          changeFilterModalState={changeFilterModalState}
+        />
+      )}
     </FullScreen>
   );
 }

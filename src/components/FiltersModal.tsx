@@ -4,31 +4,33 @@ import Filters from "../store/Filters";
 
 type Props = {
   videoStream?: MediaStream;
+  changeFilterModalState: (state: boolean) => void;
 };
 
-function FiltersModal({ videoStream }: Props) {
+function FiltersModal({ videoStream, changeFilterModalState }: Props) {
   React.useEffect(() => {
     if (videoStream) {
       const modalVideos = document.getElementsByClassName("modal-video");
-      console.log(videoStream);
 
-      for (let i = 0; i < modalVideos.length; i++) {
-        console.log(modalVideos.item(i));
+      for (let i = 0; i < modalVideos.length; i++)
         (modalVideos.item(i) as HTMLVideoElement).srcObject = videoStream;
-      }
     }
   }, [videoStream]);
 
-  const selectFilter = React.useCallback((filterName: string) => {
-    const filterFigure = document.getElementById(
-      "display-filter"
-    ) as HTMLElement;
-    filterFigure.classList.forEach((f) => {
-      if (Filters.filter((filter) => filter.className === f).length >= 1)
-        filterFigure.classList.remove(f);
-    });
-    filterFigure.classList.add(filterName);
-  }, []);
+  const selectFilter = React.useCallback(
+    (filterName: string) => {
+      const filterFigure = document.getElementById(
+        "display-filter"
+      ) as HTMLElement;
+      filterFigure.classList.forEach((f) => {
+        if (Filters.filter((filter) => filter.className === f).length >= 1)
+          filterFigure.classList.remove(f);
+      });
+      if (filterName !== "") filterFigure.classList.add(filterName);
+      changeFilterModalState(false);
+    },
+    [changeFilterModalState]
+  );
 
   return (
     <>
