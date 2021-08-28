@@ -16,7 +16,6 @@ function DongbaekPage({ store }: Props) {
 
   React.useEffect(() => {
     const video = document.getElementById("display-video") as HTMLVideoElement;
-
     navigator.getUserMedia(
       {
         video: true,

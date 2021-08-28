@@ -30,6 +30,11 @@ function FormeTouch({
   const [showFlower, setShowFlower] = React.useState<boolean>(false);
 
   React.useEffect(() => {
+    // const video = document.getElementById("display-video") as HTMLVideoElement;
+    // video.srcObject = store!.videoStream;
+  }, [store]);
+
+  React.useEffect(() => {
     if (refFlashBlock) {
       refFlashBlock.current?.addEventListener("animationend", () => {
         setShowFlower(true);
