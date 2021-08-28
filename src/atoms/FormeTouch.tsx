@@ -80,6 +80,9 @@ function FormeTouch({
       canvasContext?.beginPath();
 
       if (data) setImageData(data);
+
+      const film = document.getElementById("film") as HTMLDivElement;
+      film!.classList.add("capturing");
     }
   }, []);
 
@@ -124,9 +127,11 @@ function FormeTouch({
         <div className="horizontal left" />
       </BodyBack>
       <PolarEnter>
-        <Polar>
+        <Polar id="film">
           {imageData ? (
-            <img src={imageData} alt="result" className="result" />
+            <figure className={store?.selectFilter}>
+              <img src={imageData} alt="result" className="result" />
+            </figure>
           ) : (
             <div className="polar-wrap" />
           )}
@@ -264,9 +269,11 @@ const Polar = styled.div`
   box-shadow: 2px 2px 4px #333;
   background-color: #fff;
 
-  /* animation: ${AniPolar} 4s forwards linear; */
+  &.capturing {
+    animation: ${AniPolar} 4s forwards linear;
+  }
 
-  & > * {
+  & * {
     width: 330px;
     height: 225px;
   }
