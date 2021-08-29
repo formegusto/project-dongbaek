@@ -6,6 +6,7 @@ import { useCallback } from "react";
 import FlowersComponent from "../components/FlowersComponent";
 import { inject, observer } from "mobx-react";
 import UIStore from "../store/UIStore";
+import { useEffect } from "react";
 
 type Props = {
   changeBorderAni: () => void;
@@ -25,7 +26,6 @@ function FormeTouch({
   const refFlashBlock = React.useRef<HTMLDivElement>(null);
   const refBody = React.useRef<HTMLDivElement>(null);
   const refCanvas = React.useRef<HTMLCanvasElement>(null);
-  const [imageData, setImageData] = React.useState<string | null>(null);
   const [showTitle, setShowTitle] = React.useState<boolean>(false);
   const [showFlower, setShowFlower] = React.useState<boolean>(false);
 
@@ -68,23 +68,9 @@ function FormeTouch({
     }
   }, [showFlower, changeBorderAni]);
 
-  const onCapture = useCallback(() => {
-    const video = document.getElementsByTagName("video")[0];
-
-    if (refCanvas) {
-      const canvasContext = refCanvas.current?.getContext("2d");
-      canvasContext?.drawImage(video, 0, 0, 300, 150);
-
-      const data = refCanvas.current?.toDataURL("image/png");
-      canvasContext?.clearRect(0, 0, 300, 150);
-      canvasContext?.beginPath();
-
-      if (data) setImageData(data);
-
-      const film = document.getElementById("film") as HTMLDivElement;
-      film!.classList.add("capturing");
-    }
-  }, []);
+  const timerStart = useCallback(() => {
+    store?.changeTimerState(true);
+  }, [store]);
 
   return (
     <>
@@ -99,7 +85,7 @@ function FormeTouch({
       <BodyBack white={bodyWhite}>
         <ContentBlock className="display">
           <DisplayItem>
-            <li onClick={onCapture}>
+            <li onClick={timerStart}>
               <RiCameraLensLine />
             </li>
             <li onClick={() => store?.changeModalState(true)}>
@@ -128,9 +114,9 @@ function FormeTouch({
       </BodyBack>
       <PolarEnter>
         <Polar id="film">
-          {imageData ? (
+          {store?.imgData ? (
             <figure className={store?.selectFilter}>
-              <img src={imageData} alt="result" className="result" />
+              <img src={store?.imgData} alt="result" className="result" />
             </figure>
           ) : (
             <div className="polar-wrap" />

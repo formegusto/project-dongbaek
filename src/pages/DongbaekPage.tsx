@@ -5,6 +5,7 @@ import _ from "lodash";
 import FiltersModal from "../components/FiltersModal";
 import { inject, observer } from "mobx-react";
 import UIStore from "../store/UIStore";
+import TimerModal from "../components/TimerModal";
 
 type Props = {
   store?: UIStore;
@@ -51,6 +52,7 @@ function DongbaekPage({ store }: Props) {
     <FullScreen ref={refScreen}>
       <DongbaekContainer />
       {store?.showModal && <FiltersModal videoStream={videoStream} />}
+      {store?.showTimerModal && <TimerModal />}
     </FullScreen>
   );
 }

@@ -8,6 +8,9 @@ class UIStore {
   selectFilter: string;
   showModal: boolean;
   videoStream: MediaStream | null;
+  timer: number;
+  showTimerModal: boolean;
+  imgData: string | null;
 
   constructor(root: RootStore) {
     console.log("이게 먼저임?");
@@ -17,6 +20,9 @@ class UIStore {
     this.selectFilter = "";
     this.showModal = false;
     this.videoStream = null;
+    this.timer = 5;
+    this.showTimerModal = false;
+    this.imgData = null;
     // navigator.getUserMedia(
     //   {
     //     video: true,
@@ -38,6 +44,14 @@ class UIStore {
 
   readyCam(videoStream: MediaStream) {
     this.videoStream = videoStream;
+  }
+
+  changeTimerState(state: boolean) {
+    this.showTimerModal = state;
+  }
+
+  captureData(imgData: string) {
+    this.imgData = imgData;
   }
 }
 
