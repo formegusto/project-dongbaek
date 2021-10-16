@@ -13,7 +13,6 @@ class UIStore {
   imgData: string | null;
 
   constructor(root: RootStore) {
-    console.log("이게 먼저임?");
     makeAutoObservable(this);
     this.root = root;
     this.filters = Filters;

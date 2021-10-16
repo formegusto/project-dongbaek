@@ -10,18 +10,18 @@ function DongbaekComponent() {
   const [bodyFrontWhite, setBodyFrontWhite] = React.useState<boolean>(false);
 
   React.useEffect(() => {
-    if (refWhiteScreen)
-      refWhiteScreen.current?.addEventListener("animationend", () => {
-        setBodyFrontWhite(true);
-      });
+    // if (refWhiteScreen)
+    // refWhiteScreen.current?.addEventListener("animationend", () => {
+    //   setBodyFrontWhite(true);
+    // });
   }, []);
 
   const changeAllWhite = useCallback(() => {
-    setAllWhite(true);
+    // setAllWhite(true);
   }, []);
 
   const changeBorderAni = useCallback(() => {
-    setBorderAni(true);
+    // setBorderAni(true);
   }, []);
 
   return (

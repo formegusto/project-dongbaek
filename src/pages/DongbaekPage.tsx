@@ -17,18 +17,17 @@ function DongbaekPage({ store }: Props) {
 
   React.useEffect(() => {
     const video = document.getElementById("display-video") as HTMLVideoElement;
-    navigator.getUserMedia(
-      {
+    navigator.mediaDevices
+      .getUserMedia({
         video: true,
-      },
-      (stream: MediaStream) => {
+      })
+      .then((stream: MediaStream) => {
         setVideoStream(stream);
         video.srcObject = stream;
-      },
-      (err) => {
+      })
+      .catch((err) => {
         console.error(err);
-      }
-    );
+      });
   }, []);
 
   React.useEffect(() => {

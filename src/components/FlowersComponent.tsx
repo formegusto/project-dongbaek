@@ -1,5 +1,5 @@
 import React from "react";
-import styled, { css } from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 import FlowersData from "../store/FlowersData";
 
 type ColorType = "red" | "pink" | "white";
@@ -10,27 +10,19 @@ type Rect = {
   rot?: number;
 };
 
+type AniInfo = {
+  timeout: number;
+  duration: number;
+};
 type FlowerStyle = {
   size: number /* is px */;
   color: ColorType;
   rect?: Rect;
-
-  timeout?: number;
-  duration?: number;
+  aniInfo?: AniInfo;
 };
 
 function Flower(props: FlowerStyle) {
   const refDongbaek = React.useRef<HTMLDivElement>(null);
-  React.useEffect(() => {
-    setTimeout(
-      () => {
-        if (refDongbaek.current) {
-          refDongbaek.current.style.transform = `rotateZ(${props.rect?.rot}deg) scale(3)`;
-        }
-      },
-      props.duration ? props.duration : 10
-    );
-  }, [props]);
 
   return (
     <OneFlower.Wrap
@@ -48,6 +40,14 @@ function Flower(props: FlowerStyle) {
   );
 }
 
+const FlowerAni = (rot: number) => keyframes`
+  from {
+    transform: rotateZ(30deg) scale(0);
+  } to {
+    transform: rotateZ(30deg) scale(8);
+  }
+`;
+
 const OneFlower = {
   Wrap: styled.div<FlowerStyle>`
     position: absolute;
@@ -58,10 +58,6 @@ const OneFlower = {
     height: ${(props) => props.size}px;
     transform-origin: 50% 50%;
 
-    ${({ timeout }) => css`
-      transition: ${timeout}s ease-out;
-    `}
-
     ${({ rect }) =>
       rect &&
       css`
@@ -70,6 +66,15 @@ const OneFlower = {
 
         ${rect.rot && `transform: rotateZ(${rect.rot}deg) scale(0)`}
       `};
+
+    ${({ aniInfo, rect }) =>
+      aniInfo &&
+      rect &&
+      rect.rot &&
+      css`
+        animation: ${FlowerAni(rect.rot)} ${aniInfo.timeout}s linear forwards;
+        animation-delay: ${aniInfo.duration}s;
+      `}
 
     & > .petal {
       position: absolute;
@@ -123,30 +128,43 @@ const OneFlower = {
   Stamen: styled.div``,
 };
 
-function FlowersComponent() {
+function FlowersComponent({ hide }: { hide: boolean }) {
   return (
-    <FlowersBlock>
+    <FlowersBlock hide={hide}>
       {FlowersData.map((flower, idx) => (
         <Flower
           size={200}
           color={flower.color}
           key={idx}
           rect={{ x: flower.x, y: flower.y, rot: flower.rot }}
-          timeout={flower.timeout}
-          duration={flower.duration}
+          aniInfo={flower}
         />
       ))}
     </FlowersBlock>
   );
 }
 
-const FlowersBlock = styled.div`
+const FlowersBlock = styled.div<{ hide: boolean }>`
   position: absolute;
 
   width: 520px;
   height: 360px;
 
   border-radius: 32px;
+  ${({ hide }) =>
+    hide
+      ? css`
+          display: none;
+          & * {
+            animation-play-state: paused;
+          }
+        `
+      : css`
+          display: block;
+          & * {
+            animation-play-state: running;
+          }
+        `}
 `;
 
 export default FlowersComponent;

@@ -6,7 +6,6 @@ import { useCallback } from "react";
 import FlowersComponent from "../components/FlowersComponent";
 import { inject, observer } from "mobx-react";
 import UIStore from "../store/UIStore";
-import { useEffect } from "react";
 
 type Props = {
   changeBorderAni: () => void;
@@ -54,13 +53,13 @@ function FormeTouch({
       for (let i = 0; i < dongbaekList.length; i++)
         dongbaekList.item(i)?.addEventListener("transitionend", (ev: any) => {
           if (ev.target.classList.contains("red")) {
-            setShowTitle(true);
-            const title = document.querySelector(
-              ".title.background"
-            ) as HTMLDivElement;
-            title.addEventListener("animationend", () => {
-              changeBorderAni();
-            });
+            // setShowTitle(true);
+            // const title = document.querySelector(
+            //   ".title.background"
+            // ) as HTMLDivElement;
+            // title.addEventListener("animationend", () => {
+            //   changeBorderAni();
+            // });
           }
           if (ev.target.classList.contains("pink")) {
           }
@@ -130,7 +129,7 @@ function FormeTouch({
       </PolarEnter>
 
       <Body white={bodyWhite} ani={borderAni} ref={refBody}>
-        {showFlower && <FlowersComponent />}
+        {/* {showFlower && <FlowersComponent />} */}
         {showTitle && <Title.Background className="title background" />}
         <LensBlock ani={borderAni}>
           <Lens ani={borderAni} />

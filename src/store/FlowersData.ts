@@ -14,15 +14,15 @@ export default [
     y: 192,
     rot: -33,
     timeout: 2,
-    duration: 500,
+    duration: 0.5,
   },
   {
     color: "pink",
     x: 44,
     y: -29,
     rot: -21,
-    timeout: 3.2,
-    duration: 100,
+    timeout: 4,
+    duration: 0.1,
   },
   {
     color: "white",
@@ -30,6 +30,6 @@ export default [
     y: 97,
     rot: 24,
     timeout: 2.5,
-    duration: 350,
+    duration: 0.35,
   },
 ] as FlowerData[];
