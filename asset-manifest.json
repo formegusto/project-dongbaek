@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/project-dongbaek/static/css/main.399d4db2.chunk.css",
+    "main.js": "/project-dongbaek/static/js/main.cf37260e.chunk.js",
+    "main.js.map": "/project-dongbaek/static/js/main.cf37260e.chunk.js.map",
+    "runtime-main.js": "/project-dongbaek/static/js/runtime-main.af507d9b.js",
+    "runtime-main.js.map": "/project-dongbaek/static/js/runtime-main.af507d9b.js.map",
+    "static/js/2.702bf9ab.chunk.js": "/project-dongbaek/static/js/2.702bf9ab.chunk.js",
+    "static/js/2.702bf9ab.chunk.js.map": "/project-dongbaek/static/js/2.702bf9ab.chunk.js.map",
+    "static/js/3.bc34276b.chunk.js": "/project-dongbaek/static/js/3.bc34276b.chunk.js",
+    "static/js/3.bc34276b.chunk.js.map": "/project-dongbaek/static/js/3.bc34276b.chunk.js.map",
+    "index.html": "/project-dongbaek/index.html",
+    "static/css/main.399d4db2.chunk.css.map": "/project-dongbaek/static/css/main.399d4db2.chunk.css.map",
+    "static/js/2.702bf9ab.chunk.js.LICENSE.txt": "/project-dongbaek/static/js/2.702bf9ab.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.af507d9b.js",
+    "static/js/2.702bf9ab.chunk.js",
+    "static/css/main.399d4db2.chunk.css",
+    "static/js/main.cf37260e.chunk.js"
+  ]
+}
