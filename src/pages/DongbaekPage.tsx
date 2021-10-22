@@ -17,6 +17,13 @@ function DongbaekPage({ store }: Props) {
   const refScreen = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
+    const documentHeight = document.body.scrollHeight - window.innerHeight;
+
+    window.scrollTo({
+      top: documentHeight / 2,
+    });
+  }, []);
+  React.useEffect(() => {
     const video = document.getElementById("display-video") as HTMLVideoElement;
     navigator.mediaDevices
       .getUserMedia({
@@ -25,10 +32,13 @@ function DongbaekPage({ store }: Props) {
       .then((stream: MediaStream) => {
         setVideoStream(stream);
         video.srcObject = stream;
+        video.addEventListener("playing", () => {
+          setTimeout(() => {
+            video.classList.add("playing");
+          }, 1000);
+        });
       })
-      .catch((err) => {
-        console.error(err);
-      });
+      .catch(console.log);
   }, []);
 
   React.useEffect(() => {
@@ -48,8 +58,25 @@ function DongbaekPage({ store }: Props) {
     );
   }, []);
 
+  return (
+    <>
+      {/* <Splash /> */}
+      <FullScreen ref={refScreen}>
+        <DongbaekContainer />
+        {store?.showModal && <FiltersModal videoStream={videoStream} />}
+        {store?.showTimerModal && <TimerModal />}
+      </FullScreen>
+    </>
+  );
   return store?.splash ? (
-    <Splash />
+    <>
+      <Splash />
+      <FullScreen ref={refScreen}>
+        <DongbaekContainer />
+        {store?.showModal && <FiltersModal videoStream={videoStream} />}
+        {store?.showTimerModal && <TimerModal />}
+      </FullScreen>
+    </>
   ) : (
     <FullScreen ref={refScreen}>
       <DongbaekContainer />

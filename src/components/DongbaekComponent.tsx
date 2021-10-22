@@ -6,7 +6,6 @@ import FormeTouch from "../atoms/FormeTouch";
 function DongbaekComponent() {
   const refWhiteScreen = React.useRef<HTMLDivElement>(null);
   const [borderAni, setBorderAni] = React.useState<boolean>(false);
-  const [allWhite, setAllWhite] = React.useState<boolean>(false);
   const [bodyFrontWhite, setBodyFrontWhite] = React.useState<boolean>(false);
 
   React.useEffect(() => {
@@ -16,21 +15,16 @@ function DongbaekComponent() {
     // });
   }, []);
 
-  const changeAllWhite = useCallback(() => {
-    // setAllWhite(true);
-  }, []);
-
   const changeBorderAni = useCallback(() => {
     // setBorderAni(true);
   }, []);
 
   return (
-    <DongbaekScreen ani={allWhite}>
+    <DongbaekScreen>
       <PolarBlock className="dimension">
         <FormeTouch
           borderAni={borderAni}
           changeBorderAni={changeBorderAni}
-          changeAllWhite={changeAllWhite}
           bodyWhite={bodyFrontWhite}
         />
       </PolarBlock>
@@ -38,7 +32,7 @@ function DongbaekComponent() {
   );
 }
 
-const DongbaekScreen = styled.div<{ ani?: boolean }>`
+const DongbaekScreen = styled.div`
   perspective: 1000px;
 
   display: flex;
@@ -53,14 +47,7 @@ const DongbaekScreen = styled.div<{ ani?: boolean }>`
 
   transition: 1s;
 
-  ${({ ani }) =>
-    ani
-      ? css`
-          background-color: #fff;
-        `
-      : css`
-          background-color: #000;
-        `}
+  background-color: #fff;
 `;
 
 const PolarBlock = styled.div`
@@ -75,6 +62,10 @@ const PolarBlock = styled.div`
   transform: rotateY(0deg) rotateX(0deg);
   transform-origin: 50% 50%;
   transform-style: preserve-3d;
+
+  & *:not(.display-item) {
+    opacity: 0;
+  }
 `;
 
 export default DongbaekComponent;

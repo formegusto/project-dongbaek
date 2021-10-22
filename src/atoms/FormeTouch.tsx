@@ -3,34 +3,25 @@ import styled, { css, keyframes } from "styled-components";
 import { RiCameraLensLine, RiPolaroidLine, RiTimer2Line } from "react-icons/ri";
 import polarLogo from "../assets/polaroid-logo.png";
 import { useCallback } from "react";
-import FlowersComponent from "../components/FlowersComponent";
 import { inject, observer } from "mobx-react";
 import UIStore from "../store/UIStore";
 
 type Props = {
   changeBorderAni: () => void;
   borderAni: boolean;
-  changeAllWhite: () => void;
   bodyWhite: boolean;
   store?: UIStore;
 };
 
-function FormeTouch({
-  borderAni,
-  changeBorderAni,
-  changeAllWhite,
-  bodyWhite,
-  store,
-}: Props) {
+function FormeTouch({ borderAni, changeBorderAni, bodyWhite, store }: Props) {
   const refFlashBlock = React.useRef<HTMLDivElement>(null);
   const refBody = React.useRef<HTMLDivElement>(null);
   const refCanvas = React.useRef<HTMLCanvasElement>(null);
-  const [showTitle, setShowTitle] = React.useState<boolean>(false);
   const [showFlower, setShowFlower] = React.useState<boolean>(false);
 
   React.useEffect(() => {
-    // const video = document.getElementById("display-video") as HTMLVideoElement;
-    // video.srcObject = store!.videoStream;
+    const video = document.getElementById("display-video") as HTMLVideoElement;
+    video.srcObject = store!.videoStream;
   }, [store]);
 
   React.useEffect(() => {
@@ -39,13 +30,7 @@ function FormeTouch({
         setShowFlower(true);
       });
     }
-
-    if (refBody) {
-      refBody.current?.addEventListener("animationend", () => {
-        changeAllWhite();
-      });
-    }
-  }, [changeAllWhite]);
+  }, []);
 
   React.useEffect(() => {
     if (showFlower) {
@@ -73,7 +58,7 @@ function FormeTouch({
 
   return (
     <>
-      <FlashBlock white={bodyWhite} ref={refFlashBlock} ani={borderAni}>
+      <FlashBlock ref={refFlashBlock}>
         <div className="back">
           <div className="vertical top" />
           <div className="horizontal right" />
@@ -81,8 +66,8 @@ function FormeTouch({
           <div className="horizontal left" />
         </div>
       </FlashBlock>
-      <BodyBack white={bodyWhite}>
-        <ContentBlock className="display">
+      <BodyBack white={bodyWhite} className="display-item">
+        <ContentBlock className="display display-item">
           <DisplayItem>
             <li onClick={timerStart}>
               <RiCameraLensLine />
@@ -94,13 +79,16 @@ function FormeTouch({
               <RiTimer2Line />
             </li>
           </DisplayItem>
-          <DisplayBlock>
+          <DisplayBlock className="display-item">
             <canvas id="capture-box" ref={refCanvas} />
 
-            <Filter id="display-filter" className={store?.selectFilter}>
-              <Display autoPlay id="display-video" />
+            <Filter
+              id="display-filter"
+              className={`display-item ${store?.selectFilter}`}
+            >
+              <Display autoPlay id="display-video" className="display-item" />
             </Filter>
-
+            {/* <div className="opacity-ani"/> */}
             <img src={polarLogo} alt="logo" className="logo" />
           </DisplayBlock>
         </ContentBlock>
@@ -128,18 +116,10 @@ function FormeTouch({
         </PolarBack>
       </PolarEnter>
 
-      <Body white={bodyWhite} ani={borderAni} ref={refBody}>
-        {/* {showFlower && <FlowersComponent />} */}
-        {showTitle && <Title.Background className="title background" />}
+      <Body ref={refBody}>
         <LensBlock ani={borderAni}>
           <Lens ani={borderAni} />
         </LensBlock>
-        {showTitle && (
-          <Title.Wrap>
-            <Title.Main className="title main">DONGBAEK</Title.Main>
-            <Title.Sub className="title sub">pure someday</Title.Sub>
-          </Title.Wrap>
-        )}
       </Body>
     </>
   );
@@ -273,16 +253,14 @@ const PolarBack = styled.div`
   width: 400px;
   height: 250px;
 
-  border: 1px solid #000;
+  border: 2px solid #333;
 
-  background-color: #000;
   transform: translateZ(-5px);
 
   & > div {
     position: absolute;
 
-    background-color: #000;
-    border: 1px soild #000;
+    border: 1px soild #333;
     box-sizing: border-box;
   }
 
@@ -377,6 +355,12 @@ const Display = styled.video`
   object-fit: cover;
   border-radius: 0.25rem;
   /* transform: rotateY(180deg); */
+  opacity: 0;
+  transition: 0.7s;
+
+  &.playing {
+    opacity: 1;
+  }
 `;
 const DisplayItem = styled.ul`
   font-size: 1.5rem;
@@ -399,27 +383,6 @@ const DisplayItem = styled.ul`
   }
 `;
 
-const AniFlashBlock = keyframes`
-  from {
-    transform: translateY(0) translateZ(-35px);
-  }
-  to {
-    transform: translateY(-70px) translateZ(-35px);
-  }
-`;
-
-const AniFlashBlockBorder = keyframes`
-  from {
-    transform: translateY(-70px) translateZ(-35px);
-  }
-  to {
-    border: 2px solid #000;
-    background-color: #fff;
-    border-bottom: none;
-    transform: translateY(-70px) translateZ(-35px);
-  }
-`;
-
 const AniBorderWidth = keyframes`
   to {
     background-color: #fff;
@@ -427,7 +390,7 @@ const AniBorderWidth = keyframes`
   }
 `;
 
-const Body = styled.div<{ ani?: boolean; white?: boolean }>`
+const Body = styled.div`
   z-index: 2;
   position: relative;
   overflow: hidden;
@@ -439,25 +402,12 @@ const Body = styled.div<{ ani?: boolean; white?: boolean }>`
   width: 520px;
   height: 360px;
 
-  border: 16px solid #ffffff;
+  border: 2px solid #333;
   box-sizing: border-box;
   border-radius: 32px;
-  background-color: #000;
+  background-color: #fff;
 
   transform-style: preserve-3d;
-
-  ${(props) =>
-    props.ani &&
-    css`
-      animation: ${AniBorderWidth} 0s forwards;
-      /* background-color: transparent; */
-    `}
-  ${(props) =>
-    props.white &&
-    css`
-      transition: 1s;
-      background-color: #fff;
-    `}
 `;
 
 const BodyBack = styled.div<{ white?: boolean }>`
@@ -549,7 +499,7 @@ const BodyBack = styled.div<{ white?: boolean }>`
   }
 `;
 
-const FlashBlock = styled.div<{ ani?: boolean; white?: boolean }>`
+const FlashBlock = styled.div`
   transform-style: preserve-3d;
   display: flex;
 
@@ -561,33 +511,24 @@ const FlashBlock = styled.div<{ ani?: boolean; white?: boolean }>`
   width: 150px;
   height: 75px;
 
-  border: 6px solid #ffffff;
+  border: 2px solid #333;
   border-bottom: none;
   box-sizing: border-box;
   border-radius: 16px 16px 0 0;
+  background-color: #fff;
 
-  animation: ${AniFlashBlock} 1.2s forwards;
-
-  ${(props) =>
-    props.ani &&
-    css`
-      animation: ${AniFlashBlockBorder} 0.3s forwards;
-    `}
-
-  ${(props) =>
-    props.white &&
-    css`
-      background-color: #fff;
-    `}
+  transform: translateY(-70px) translateZ(-35px);
 
   & > .back {
     transform-style: preserve-3d;
     position: relative;
 
-    border: 2px solid #000;
+    border: 2px solid #333;
     box-sizing: border-box;
     border-bottom: none;
     border-radius: 16px 16px 0 0;
+
+    background-color: #fff;
 
     width: 150px;
     height: 75px;
@@ -597,7 +538,9 @@ const FlashBlock = styled.div<{ ani?: boolean; white?: boolean }>`
     & > div {
       box-sizing: border-box;
       position: absolute;
-      border: 1px solid #000;
+      border: 1px solid #333;
+
+      background-color: #fff;
     }
 
     & > .vertical {
@@ -649,7 +592,7 @@ const LensBlock = styled.div<{ ani?: boolean }>`
   width: 200px;
   height: 200px;
 
-  border: 16px solid #fff;
+  border: 2px solid #333;
   box-sizing: border-box;
   border-radius: 100%;
 
@@ -664,7 +607,7 @@ const Lens = styled.div<{ ani?: boolean }>`
   width: 135px;
   height: 135px;
 
-  border: 16px solid #fff;
+  border: 2px solid #333;
   box-sizing: border-box;
   border-radius: 100%;
 
