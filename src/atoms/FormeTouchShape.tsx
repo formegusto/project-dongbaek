@@ -92,7 +92,11 @@ const ANIS: Ani[] = [
   },
 ];
 
-function FormeTouchShape() {
+type Props = {
+  changeSplash: () => void;
+};
+
+function FormeTouchShape({ changeSplash }: Props) {
   const [staticAnis, setStaticAnis] = React.useState<StaticAni>({});
   const [stationIdx, setStationIdx] = React.useState<number>(0);
 
@@ -112,15 +116,20 @@ function FormeTouchShape() {
       if (el) {
         (el[0] as HTMLElement).addEventListener("animationend", aniEnd);
       }
+    } else {
+      changeSplash();
     }
-    return () => {
-      const el = document.getElementsByClassName(ANIS[stationIdx].className);
 
-      if (el) {
-        (el[0] as HTMLElement).removeEventListener("animationend", aniEnd);
+    return () => {
+      if (stationIdx < ANIS.length) {
+        const el = document.getElementsByClassName(ANIS[stationIdx].className);
+
+        if (el) {
+          (el[0] as HTMLElement).removeEventListener("animationend", aniEnd);
+        }
       }
     };
-  }, [stationIdx, aniEnd]); // eslint-disable-line
+  }, [stationIdx, aniEnd, changeSplash]); // eslint-disable-line
 
   return (
     <Block>

@@ -1,9 +1,7 @@
-import Splash from "./components/Splash";
 import DongbaekPage from "./pages/DongbaekPage";
 
 function App() {
-  // return <DongbaekPage />;
-  return <Splash />;
+  return <DongbaekPage />;
 }
 
 export default App;

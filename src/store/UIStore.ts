@@ -11,6 +11,7 @@ class UIStore {
   timer: number;
   showTimerModal: boolean;
   imgData: string | null;
+  splash: boolean;
 
   constructor(root: RootStore) {
     makeAutoObservable(this);
@@ -22,6 +23,7 @@ class UIStore {
     this.timer = 5;
     this.showTimerModal = false;
     this.imgData = null;
+    this.splash = true;
     // navigator.getUserMedia(
     //   {
     //     video: true,
@@ -31,6 +33,10 @@ class UIStore {
     //   },
     //   (err) => {}
     // );
+  }
+
+  changeSplash(splash: boolean) {
+    this.splash = splash;
   }
 
   changeFilter(selectFilter: string) {

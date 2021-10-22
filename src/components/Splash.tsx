@@ -1,10 +1,22 @@
+import { inject } from "mobx-react";
+import { observer } from "mobx-react-lite";
+import React from "react";
 import styled from "styled-components";
 import FormeTouchShape from "../atoms/FormeTouchShape";
+import UIStore from "../store/UIStore";
 
-function Splash() {
+type Props = {
+  store?: UIStore;
+};
+
+function Splash({ store }: Props) {
+  const changeSplash = React.useCallback(() => {
+    store?.changeSplash(false);
+  }, [store]);
+
   return (
     <Screen>
-      <FormeTouchShape />
+      <FormeTouchShape changeSplash={changeSplash} />
     </Screen>
   );
 }
@@ -20,4 +32,6 @@ const Screen = styled.div`
   align-items: center;
 `;
 
-export default Splash;
+export default inject((store: { uiStore: UIStore }) => ({
+  store: store.uiStore,
+}))(observer(Splash));

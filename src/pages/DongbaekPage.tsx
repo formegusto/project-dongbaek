@@ -6,6 +6,7 @@ import FiltersModal from "../components/FiltersModal";
 import { inject, observer } from "mobx-react";
 import UIStore from "../store/UIStore";
 import TimerModal from "../components/TimerModal";
+import Splash from "../components/Splash";
 
 type Props = {
   store?: UIStore;
@@ -47,7 +48,9 @@ function DongbaekPage({ store }: Props) {
     );
   }, []);
 
-  return (
+  return store?.splash ? (
+    <Splash />
+  ) : (
     <FullScreen ref={refScreen}>
       <DongbaekContainer />
       {store?.showModal && <FiltersModal videoStream={videoStream} />}
